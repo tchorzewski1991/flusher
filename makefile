@@ -18,3 +18,6 @@ vet:
 
 fmt:
 	@go fmt ./...
+
+generate:
+	go generate ./...

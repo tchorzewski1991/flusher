@@ -1,7 +1,14 @@
 package flusher
 
+//go:generate mockgen -destination=mock/exporter_mock.go -package=flusherMock github.com/tchorzewski1991/flusher/flusher Exporter
+
+type Exporter interface {
+	Export() error
+}
+
 type Agent struct {
-	active bool
+	active   bool
+	exporter Exporter
 }
 
 func NewAgent() *Agent {
