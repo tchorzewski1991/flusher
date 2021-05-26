@@ -11,8 +11,18 @@ type Agent struct {
 	exporter Exporter
 }
 
-func NewAgent() *Agent {
-	return &Agent{}
+type AgentOps func(*Agent) error
+
+func NewAgent(opts ...AgentOps) (*Agent, error) {
+	a := &Agent{}
+
+	for _, opt := range opts {
+		if err := opt(a); err != nil {
+			return nil, err
+		}
+	}
+
+	return a, nil
 }
 
 func (a *Agent) Start() error {

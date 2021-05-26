@@ -1,6 +1,7 @@
 package flusher_test
 
 import (
+	"errors"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"github.com/tchorzewski1991/flusher/flusher"
@@ -8,9 +9,20 @@ import (
 
 var _ = Describe("Agent", func() {
 	var agent *flusher.Agent
+	var err error
 
 	BeforeEach(func() {
-		agent = flusher.NewAgent()
+		agent, err = flusher.NewAgent()
+	})
+
+	Context("NewAgent", func() {
+		It("should propagate opt err", func() {
+			agent, err = flusher.NewAgent(func(_ *flusher.Agent) error {
+				return errors.New("opt err")
+			})
+			Expect(agent).To(BeNil())
+			Expect(err.Error()).To(Equal("opt err"))
+		})
 	})
 
 	Context("Start", func() {
